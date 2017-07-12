@@ -244,10 +244,13 @@ output = output.replace('DAY_FOUR',days_of_week[(today_dt + 3*one_day).weekday()
 
 
 
-
+# TfL API
+# 
+# Grab data using the TfL API for a particular stop point (bus)
+#
 data = requests.get("https://api.tfl.gov.uk/StopPoint/490008060C/Arrivals?app_id=7dcae5c1&app_key={}".format(secrets.tflAPIKey))
 
-
+# Parse json based data, grabbing ID and arrival times
 json = data.json()
 buses = []
 for bus in json:
@@ -256,6 +259,7 @@ for bus in json:
     print t.strftime("%H:%M:%S"), int(bus['timeToStation'])/60
     buses += [(bus['lineName'], t.strftime("%H:%M:%S"), int(bus['timeToStation'])/60)]
 
+# Sort buses by arrival time and add times to SVG output
 arrivals = sorted(buses, key=lambda bus:bus[2])
 count = 0
 for bus in arrivals:
@@ -265,11 +269,13 @@ for bus in arrivals:
     if count == 3:
         break
 
+# Grab tube related data for the Northern line platform at Hendon Central
 tubeJson = requests.get("https://api.tfl.gov.uk/Line/northern/Arrivals/940GZZLUHCL?direction=inbound&app_id=7dcae5c1&app_key={}".format(secrets.tflAPIKey)).json()
 MAX_TRAINS = 4 #4 trains
 MAX_BUSES = 2 #2 buses
 trains = []
 
+# Parse the json data, recognising different branches of trains
 for tube in tubeJson:
     t = datetime.datetime.strptime(tube['expectedArrival'][:-2], "%Y-%m-%dT%H:%M:%S")
     if "Bank" in tube['towards']:
@@ -277,6 +283,10 @@ for tube in tubeJson:
     else:
         train = ("CX  ", t, t.strftime("%H:%M:%S"))
     trains += [train]
+
+
+
+# Sort trains by arrival time and add to SVG output
 
 arrivals = sorted(trains, key=lambda train:train[1])
 print arrivals
@@ -293,7 +303,7 @@ if count < MAX_TRAINS:
     for i in range(count, MAX_TRAINS):
         output = output.replace('TRAIN' + str(i), "")
 
-# Write output
+# Write SVG output
 codecs.open('kindleOutput.svg', 'w', encoding='utf-8').write(output)
 
 # EOF
