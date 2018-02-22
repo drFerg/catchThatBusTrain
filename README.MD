@@ -20,6 +20,6 @@ Inspired by and based on a weather kindle display by Matthew Petroff - [linky](h
 4. Jailbreak your kindle and make it point to your webserver
 
 
-###Example image
+### Example image
 
 ![Kindle Ambient Display](kindleOutput.png)
