@@ -22,4 +22,4 @@ Inspired by and based on a weather kindle display by Matthew Petroff - [linky](h
 
 ### Example image
 
-![Kindle Ambient Display](kindleOutput.png)
+![Kindle Ambient Display](catchThatBusTrainExample.png)
