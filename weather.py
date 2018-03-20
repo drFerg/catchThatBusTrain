@@ -6,6 +6,8 @@ import datetime
 #  Map the MetOffice weather codes to Icons. 
 # ( See http://www.metoffice.gov.uk/datapoint/product/uk-3hourly-site-specific-forecast )
 #
+
+# SVG contains all these icons mapped to these ids
 mapping = [ 
   'skc',       #  Clear night                     skc.svg
   'skc',       #  Sunny day                       skc.svg

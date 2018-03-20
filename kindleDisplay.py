@@ -29,56 +29,26 @@ location = "324151" #BARNET
 #
 #  SVG template
 #
+# Open SVG to add weather, tube and bus times
 template = 'catchThatBusTrain_src.svg'
-
-myWeather = weather.getWeatherInfo(secrets.metOfficeAPIKey, location)
-
-
-#
-# Preprocess SVG
-#
-
-# Open SVG to process
 output = codecs.open(template , 'r', encoding='utf-8').read()
 
-# Insert weather icons and temperatures
+
+# Get weather and insert into SVG
+myWeather = weather.getWeatherInfo(secrets.metOfficeAPIKey, location)
+# Insert weather icon and temperatures
 output = output.replace('ICON_ONE', myWeather['icons'][0])
-output = output.replace('ICON_TWO', myWeather['icons'][1])
-output = output.replace('ICON_THREE', myWeather['icons'][2])
-#output = output.replace('ICON_FOUR',icons[3])
-
 output = output.replace('H1', str(myWeather['highs'][0]))
-output = output.replace('H2', str(myWeather['highs'][1]))
-output = output.replace('H3', str(myWeather['highs'][2]))
-output = output.replace('H4', str(myWeather['highs'][3]))
-
 output = output.replace('L1', str(myWeather['feels'][0]))
-output = output.replace('L2', str(myWeather['feels'][1]))
-output = output.replace('L3', str(myWeather['feels'][2]))
-output = output.replace('L4', str(myWeather['feels'][3]))
-
 # Insert current time
 output = output.replace('DATE_VALPLACE', str(myWeather['dtnow']))
-
 output = output.replace('DATE', str(myWeather['dt']))
-
-# Insert days of week
-one_day = datetime.timedelta(days=1)
-print " ONE DAY:", one_day
-
-days_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-print days_of_week[(myWeather['today_dt'] + 2 * one_day).weekday()]
-print days_of_week[(myWeather['today_dt'] + 3 * one_day).weekday()]
-
-output = output.replace('DAY_THREE', days_of_week[(myWeather['today_dt'] + 2 * one_day).weekday()])
-output = output.replace('DAY_FOUR', days_of_week[(myWeather['today_dt'] + 3 * one_day).weekday()])
-
 
 
 #TFL
 stopPoint = '490008060C'
 stationLine = 'northern/Arrivals/940GZZLUHCL'
-MAX_BUSES = 2 #2 buses
+MAX_BUSES = 3 #2 buses
 MAX_TRAINS = 4 #4 trains
 
 buses = tfl.getBuses(stopPoint, secrets.tflAPIID, secrets.tflAPIKey)
@@ -91,7 +61,7 @@ for bus in arrivals:
     output = output.replace('BUS' + str(count), busNum)
     output = output.replace('BUSTIME' + str(count), busTime)
     count += 1
-    if count == 3:
+    if count == MAX_BUSES:
         break
 
 
